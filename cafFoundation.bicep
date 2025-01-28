@@ -1,6 +1,13 @@
 //Deployment Scope
 targetScope = 'managementGroup'
 
+@description('Region for Policy Assignment Deployment.  Allowed UK South and UK West')
+@allowed([
+  'uksouth'
+  'ukwest'
+])
+param location string
+
 @description('Contributor role Id')
 param roleDefinitionIdContributor string = '/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c' 
 
@@ -27,7 +34,7 @@ param resourceGroupLocationPolicyAssignmentName string = 'Allowed locations for 
 param resourceGroupLocationPolicyDefinitionId string = '/providers/microsoft.authorization/policydefinitions/e765b5de-1225-4ba3-bd56-1ac6695af988'
 
 @description('Allowed locations array.  Consumed via bicepparam file')
-param locations array = []
+param allowedLocations array = []
 
 @description('Deploy network watcher policy assignment name. 24 char max as scope is Management Group')
 @maxLength(24)
@@ -87,7 +94,7 @@ resource cafFoundationPolicySetRoleAssignment 'Microsoft.Authorization/roleAssig
 resource cafFoundationPolicySetAssign 'Microsoft.Authorization/policyAssignments@2024-04-01' = {
   name: cafFoundationPolicySetAssignName
   scope: managementGroup()
-  location: 'uksouth'
+  location: location
   identity: {
     type: 'SystemAssigned'
   }
@@ -117,7 +124,7 @@ resource cafPolicySetDefinition 'Microsoft.Authorization/policySetDefinitions@20
         policyDefinitionReferenceId: resourceGroupLocationPolicyAssignmentName
         parameters: {
           listOfAllowedLocations: {
-            value: locations
+            value: allowedLocations
           }
         }
       }
@@ -126,7 +133,7 @@ resource cafPolicySetDefinition 'Microsoft.Authorization/policySetDefinitions@20
         policyDefinitionReferenceId: resourceLocationPolicyAssignmentName
         parameters: {
           listOfAllowedLocations: {
-            value: locations
+            value: allowedLocations
           }
         }
       }

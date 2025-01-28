@@ -1,7 +1,10 @@
 using './cafFoundation.bicep'
 
+//Deployment Location
+param location = 'uksouth'
+
 //List of Allowed Locations
-param locations = [
+param allowedLocations = [
   'uksouth'
   'ukwest'
   'global'

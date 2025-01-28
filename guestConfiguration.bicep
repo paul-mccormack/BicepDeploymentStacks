@@ -1,6 +1,13 @@
 //Deployment Scope
 targetScope = 'managementGroup'
 
+@description('Region for Policy Assignment Deployment.  Allowed UK South and UK West')
+@allowed([
+  'uksouth'
+  'ukwest'
+])
+param location string
+
 @description('Name of policy set assignment. 24 char max as scope is Management Group')
 @maxLength(24)
 param policySetAssignmentName string = 'GuestConfigurationPreReq'
@@ -23,7 +30,7 @@ resource contributorRoleDef 'Microsoft.Authorization/roleDefinitions@2022-04-01'
 resource assignment 'Microsoft.Authorization/policyAssignments@2024-04-01' = {
   name: policySetAssignmentName
   scope: managementGroup()
-  location: 'uksouth'
+  location: location
   identity: {
     type: 'SystemAssigned'
   }

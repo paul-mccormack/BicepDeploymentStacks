@@ -1,6 +1,13 @@
 //Deployment Scope
 targetScope = 'managementGroup'
 
+@description('Region for Policy Assignment Deployment.  Allowed UK South and UK West')
+@allowed([
+  'uksouth'
+  'ukwest'
+])
+param location string
+
 @description('Array of enforced tags.  Consumed in bicepparam file.  Maximum 12 characters to keep within the 24 characters allowed for a Management Group scoped deployment')
 @maxLength(12)
 param tagNames array = []
@@ -58,7 +65,7 @@ resource requireTagOnRgPolicyDefinition 'Microsoft.Authorization/policyDefinitio
 resource requireTagOnRgPolicyAssign 'Microsoft.Authorization/policyAssignments@2024-04-01' = [for name in tagNames:{
   name: 'tag-${name}-on-RG'
   scope: managementGroup()
-  location: 'uksouth'
+  location: location
   properties: {
     displayName: 'Require tag ${name} on Resource Groups'
     description: 'Applies Tagging Policy to all Resource Groups'
@@ -130,7 +137,7 @@ resource inheritTagFromRgPolicyDefinition 'Microsoft.Authorization/policyDefinit
 resource inheritTagPolicyAssign 'Microsoft.Authorization/policyAssignments@2024-04-01' = [for name in tagNames: {
   name: 'Tag-${name}-from-RG'
   scope: managementGroup()
-  location: 'uksouth'
+  location: location
   identity: {
     type: 'SystemAssigned'
   }
