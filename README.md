@@ -20,12 +20,13 @@ DetatchAll - Will detach all the resources that become unmanaged but not delete 
 
 This is a great addition to ease management of complex deployment lifecycles.  Imagine you had a deployment that spanned multiple Resource Groups in different Azure regions that was regularly deleted and redeployed for maintenance.  That management task will so much easier if it's completed in a stack.
 
-## Using deployment stacks to manage Azure Policy
+## Why use deployment stacks to manage Azure Policy
 
-So why use deployment stacks to manage Azure Policy?  Policies that need to update something, like deploy an extension to a virtual machine if it is missing, require a managed identity or service principal and a role assignment to enable them to carry out the modification.  These policies are are type ```DeployIfNotExists```.  If the policy assignment is removed the service principal is deleted but the role assignment remains.  Resulting in a messy picture in your IAM settings, like in the screenshot below:
+So why use deployment stacks to manage Azure Policy?  Policies that need to update something, like deploy an extension to a virtual machine if it is missing, require a system-assigned managed identity or service principal and a role assignment to enable them to carry out the modification.  These policies are of type ```DeployIfNotExists```.  If the policy assignment is removed the system-assigned managed identity is deleted but the role assignment remains.  Resulting in a messy picture in your IAM settings, like in the screenshot below:
 
-![Orphaned Role Assignment]()
+![Orphaned Role Assignment](https://github.com/paul-mccormack/BicepDeploymentStacks/blob/main/images/orphanedRoleAssignment.jpg)
 
+Deployment Stacks completely cleans this up when you delete the stack.  No more messy unknown guid's lurking around your IAM blades!  Hooray!
 
-
+## Deployment details
 
