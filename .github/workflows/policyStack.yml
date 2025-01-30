@@ -4,10 +4,10 @@ name: Deploy Policy Stack
 
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  #push:
+  #  branches: [ "main" ]
+  #pull_request:
+  #  branches: [ "main" ]
   workflow_dispatch:
 
 permissions:
@@ -49,4 +49,13 @@ jobs:
         tenant-id: ${{secrets.AZURE_TENANT_ID}}
         subscription-id: ${{secrets.AZURE_SUBSCRIPTION_ID}} 
         enable-AzPSSession: true
+    
+    - name: Deploy
+      uses: azure/powershell@v2
+      with:
+        azPSVersion: latest
+        inlineScript: |
+          New-AzManagementGroupDeploymentStack -Name cafFoundationStackDeploy -ManagementGroupId MG-SCC-Common -Location uksouth -TemplateFile ./Bicep/cafFoundation.bicep -TemplateParameterFile ./Bicep/cafFoundation.bicepparam -ActionOnUnmanage deleteResources -DenySettingsMode None -Force
+          New-AzManagementGroupDeploymentStack -Name tagPolicyStackDeploy -ManagementGroupId MG-SCC-Common -Location uksouth -TemplateFile ./Bicep/taggingPolicies.bicep -TemplateParameterFile ./Bicep/taggingPolicies.bicepparam -ActionOnUnmanage deleteResources -DenySettingsMode None -Force
+          New-AzManagementGroupDeploymentStack -Name guestConfStackDeploy -ManagementGroupId MG-SCC-Common -Location uksouth -TemplateFile ./Bicep/GuestConfiguration.bicep -ActionOnUnmanage deleteResources -DenySettingsMode None -Force
 
