@@ -30,3 +30,15 @@ Deployment Stacks completely cleans this up when you delete the stack.  No more 
 
 ## Deployment details
 
+This stack will be managing a set of policies originally deployed in my landing zone using Azure Blueprints.  Blueprints is being deprecated on July 11th 2026 with the recommended replacement being deployment stacks.  So I'm staying well ahead of the curve with this one.  The policies are the [CAF Foundation policies](https://learn.microsoft.com/en-us/azure/governance/blueprints/samples/caf-foundation/) but I have chosen to split out the resource tagging policy into it's own Bicep template to enhance flexibility around updating it seperately.  I am also the guest configuration policiy to ensure all IaaS VM deployments have the required extension installed automatically to enable us of Azure Machine Configuration.
+
+The CAF Foundation policies are:<br/>
+
+* Allowed Azure Region for Resources and Resource Groups<br/>
+* Allowed Storage Account SKUs<br/>
+* Allowed Azure VM SKUs<br/>
+* Require Network Watcher to be deployed<br/>
+* Require Azure Storage Account Secure transfer Encryption<br/>
+* Deny resource types<br/>
+
+The stack will be deployed at the top level Management Group
