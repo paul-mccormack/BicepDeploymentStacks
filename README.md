@@ -10,17 +10,19 @@ Deployment stacks are an Azure resource of type ```Microsoft.Resources/deploymen
 **DenyWriteAndDelete** - Adds a denyAssignment that will block all attempted write and delete operations to managed resources.<br/>
 **None** - Disables denyAssignments
 
-However at this moment there are a few limitations and known issues concerning denyAssignments as detailed in the [documentation](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/deployment-stacks?tabs=azure-powershell#known-limitations).  More on that later.
+There is also the capability to exlcude specified principals from the deny setting with the ```DenySettingsExcludedPrincipal``` and exclude actions with ```DenySettingsExcludedAction```.
+
+However, at the time of writing there are a few limitations and known issues concerning denyAssignments as detailed in the [documentation](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/deployment-stacks?tabs=azure-powershell#known-limitations).  More on that later.
 
 The other main configurable capability for deployment stacks is what to do with resources that become "unmanaged".  This is covered by the ```ActionOnUnmanage``` setting.  The options are:
 
 **DeleteResource** - Will delete resources that become unmanaged but will not delete Resource Groups and Management Groups.  They will become detached from the stack.<br/>
 **DeleteAll** - Will delete resources, Resource Groups AND Management Groups that become unmanaged.  Obvsiously be VERY CAREFUL with this setting!<br/>
-**DetatchAll** - Will detach all the resources that become unmanaged but not delete them.
+**DetachAll** - Will detach all the resources that become unmanaged but not delete them.
 
 This is a great addition to ease management of complex deployments.  Imagine you had a deployment that spanned multiple Resource Groups in different Azure regions that was regularly deleted and redeployed for maintenance.  That management task will so much easier if it is managed using a deployment stack.
 
-## Ddeployment stacks are perfect for Azure Policy management
+## Deployment stacks are perfect for Azure Policy management
 
 So why use deployment stacks to manage Azure Policy?  Policies that need to update something, like deploy an extension to a virtual machine if it is missing, require a system-assigned managed identity or service principal and a role assignment to enable them to carry out the modification.  These policies are of type ```DeployIfNotExists```.  If the policy assignment is removed the system-assigned managed identity is deleted but the role assignment remains.  Resulting in a messy picture in your access control settings, like in the screenshot below:
 
@@ -41,7 +43,7 @@ The CAF Foundation policies are:<br/>
 * Require Azure Storage Account Secure transfer Encryption<br/>
 * Deny resource types<br/>
 
-The stack will be deployed at the top level Management Group to ensure all current and future subscriptions are covered by the policies.  Unfortunately this is where one of the deny assignment limitations impacts my plan.
+The stack will be deployed at the top level Management Group to ensure all current and future subscriptions are covered by the policies.  Unfortunately this is where one of the deny assignment limitations has an effect.
 
 "Deny-assignments aren't supported at the management group scope. However, they're supported in a management group stack if the deployment is pointed at the subscription scope."
 
@@ -58,3 +60,5 @@ Clicking into one of the stacks will show us the managed resources:
 ![Managed Resources](https://github.com/paul-mccormack/BicepDeploymentStacks/blob/main/images/managedRoleAssignment.jpg)
 
 The role assignment is listed as a managed resource.  Meaning if this stack is deleted both the Policy assignment and the role assignment will be cleaned up in one action.
+
+It is unfortunate I couldn't make use of a deny assignment. One scenario where they could be useful would be deploying a budget to a Subscription or Resource Group where other users need to have owner access.  The budget could be deployed to the Subscription or Resource Group scope as a stack to a parent Management Group with a deny assignment preventing the resource owner having the ability to remove the budget.  Making deployment stacks a great addition to the Governance toolset.
