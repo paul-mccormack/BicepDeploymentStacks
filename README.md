@@ -2,11 +2,11 @@
 
 ## Introduction
 
-In 2024 Azure released the capability to use deployment stacks.  You can see the announcement in the [Azure blog post](https://techcommunity.microsoft.com/blog/azuregovernanceandmanagementblog/arm-deployment-stacks-now-ga/4145469).
+During 2024 Azure released the capability to use deployment stacks.  You can see the announcement in the [Azure blog post](https://techcommunity.microsoft.com/blog/azuregovernanceandmanagementblog/arm-deployment-stacks-now-ga/4145469).
 
-Deployment stacks are an Azure resource of type ```Microsoft.Resources/deploymentStacks``` that enables you to manage a group of other Azure resources as a single atomic unit.  The aim of this is to improve the resource management lifecycle (create, update and delete) across multiple Azure scopes, for example Resource Groups, Management Groups and Subscriptions.  Another great feature of deployment stacks is the ability to add a denyAssignment to the stack to prevent unwanted changes being made. This is configured in the ```DenySettingsMode``` setting.  The options available for this are:
+Deployment stacks are an Azure resource of type ```Microsoft.Resources/deploymentStacks``` which enable management of a group of other Azure resources as a single unit.  The aim of this is to improve the resource management lifecycle (create, update and delete) across multiple Azure scopes, for example Management Groups, Subscriptions and Resource Groups.  Another great feature of deployment stacks is the ability to add a denyAssignment to the stack to prevent unwanted changes being made. This is configured in the ```DenySettingsMode``` setting.  The options available for this are:
 
-**DenyDelete** - Adds a denyAssignemnt that will block all attempted delete operations to managed resources.<br/>
+**DenyDelete** - Adds a denyAssignment that will block all attempted delete operations to managed resources.<br/>
 **DenyWriteAndDelete** - Adds a denyAssignment that will block all attempted write and delete operations to managed resources.<br/>
 **None** - Disables denyAssignments
 
@@ -20,7 +20,7 @@ The other main configurable capability for deployment stacks is what to do with 
 **DeleteAll** - Will delete resources, Resource Groups AND Management Groups that become unmanaged.  Obvsiously be VERY CAREFUL with this setting!<br/>
 **DetachAll** - Will detach all the resources that become unmanaged but not delete them.
 
-This is a great addition to ease management of complex deployments.  Imagine you had a deployment that spanned multiple Resource Groups in different Azure regions that was regularly deleted and redeployed for maintenance.  That management task will so much easier if it is managed using a deployment stack.
+This is a great addition to ease management of complex deployments.  Imagine you had a deployment that spanned multiple Resource Groups in different Azure regions that was regularly deleted and redeployed for maintenance.  That management task will so much easier by using a deployment stack.
 
 ## Deployment stacks are perfect for Azure Policy management
 
