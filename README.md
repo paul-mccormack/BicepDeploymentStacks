@@ -22,11 +22,11 @@ This is a great addition to ease management of complex deployments.  Imagine you
 
 ## Ddeployment stacks are perfect for Azure Policy management
 
-So why use deployment stacks to manage Azure Policy?  Policies that need to update something, like deploy an extension to a virtual machine if it is missing, require a system-assigned managed identity or service principal and a role assignment to enable them to carry out the modification.  These policies are of type ```DeployIfNotExists```.  If the policy assignment is removed the system-assigned managed identity is deleted but the role assignment remains.  Resulting in a messy picture in your IAM settings, like in the screenshot below:
+So why use deployment stacks to manage Azure Policy?  Policies that need to update something, like deploy an extension to a virtual machine if it is missing, require a system-assigned managed identity or service principal and a role assignment to enable them to carry out the modification.  These policies are of type ```DeployIfNotExists```.  If the policy assignment is removed the system-assigned managed identity is deleted but the role assignment remains.  Resulting in a messy picture in your access control settings, like in the screenshot below:
 
 ![Orphaned Role Assignment](https://github.com/paul-mccormack/BicepDeploymentStacks/blob/main/images/orphanedRoleAssignment.jpg)
 
-Deployment Stacks completely cleans this up when you delete the stack.  No more messy unknown guid's lurking around your IAM blades!  Hooray!
+Deployment Stacks completely cleans this up when you delete the stack.  No more messy unknown guid's lurking around your access control blades!  Hooray!
 
 ## Deployment details
 
@@ -51,4 +51,10 @@ The deployment details are in the GitHub actions [workflow](https://github.com/p
 
 With the deployment complete we can go to the Management Group in the Azure portal and see what we have done:
 
-![Deployed Stack]()
+![Deployed Stack](https://github.com/paul-mccormack/BicepDeploymentStacks/blob/main/images/deploymentStacks.jpg)
+
+Clicking into one of the stacks will show us the managed resources:
+
+![Managed Resources](https://github.com/paul-mccormack/BicepDeploymentStacks/blob/main/images/managedRoleAssignment.jpg)
+
+The role assignment is listed as a managed resource.  Meaning if this stack is deleted both the Policy assignment and the role assignment will be cleaned up in one action.
